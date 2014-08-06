@@ -18,6 +18,20 @@
     <img src="img/uce.jpg" alt="Upcoming Events" />
   </header>
 
+  <div class="page-login">
+    <h2>Ticket Checkin</h2>
+    <p>Please log in below</p>
+    <fieldset>
+      <label for="username">Username</label>
+      <input type="text" id="username" placeholder="Username" />
+    </fieldset>
+    <fieldset>
+      <label for="username">Password</label>
+      <input type="password" id="password" placeholder="Password" />
+    </fieldset>
+    <button class="btn-login">Submit</button>
+  </div>
+
   <div class="page-scan">
 
     <button class="btn-scan">Scan Ticket</button>
@@ -49,15 +63,11 @@
       <tbody>
         <tr>
           <td class="label">Ticket Code:</td>
-          <td class="field">{{ticketCode}}</td>
-        </tr>
-        <tr>
-          <td class="label">Attendee:</td>
-          <td class="field">{{attendeeName}}</td>
+          <td class="field">{{TicketCode}}</td>
         </tr>
         <tr>
           <td class="label">Ticket Type:</td>
-          <td class="field">{{ticketType}}</td>
+          <td class="field">{{TicketType}}</td>
         </tr>
       </tbody>
     </table
@@ -65,7 +75,7 @@
 
   <script id="tpl-invalid" type="text/x-handlebars-template">
     <p class="details">
-      Ticket number &quot;{{ticketCode}}&quot; is not valid
+      Ticket number &quot;{{TicketCode}}&quot; is not valid
     </p>
   </script>
 
