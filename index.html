@@ -34,24 +34,40 @@
 
   <div class="page-valid">
     <h1 class="valid">Valid Ticket</h1>
-    <p class="details">
-      <span class="label">Ticket Number:</span>
-      <span class="field">123456789</span>
-    </p>
-    <p class="details">
-      <span class="label">Ticket Type:</span>
-      <span class="field">VIP</span>
-    </p>
+    <div class="content"></div>
     <button class="hide">Done</button>
   </div>
 
   <div class="page-invalid">
     <h1 class="invalid">Invalid Ticket</h1>
-    <p class="details">
-      This ticket is not valid
-    </p>
+    <div class="content"></div>
     <button class="hide">Done</button>
   </div>
+
+  <script id="tpl-valid" type="text/x-handlebars-template">
+    <table>
+      <tbody>
+        <tr>
+          <td class="label">Ticket Code:</td>
+          <td class="field">{{ticketCode}}</td>
+        </tr>
+        <tr>
+          <td class="label">Attendee:</td>
+          <td class="field">{{attendeeName}}</td>
+        </tr>
+        <tr>
+          <td class="label">Ticket Type:</td>
+          <td class="field">{{ticketType}}</td>
+        </tr>
+      </tbody>
+    </table
+  </script>
+
+  <script id="tpl-invalid" type="text/x-handlebars-template">
+    <p class="details">
+      Ticket number &quot;{{ticketCode}}&quot; is not valid
+    </p>
+  </script>
 
   <script src="js/libs.js"></script>
 

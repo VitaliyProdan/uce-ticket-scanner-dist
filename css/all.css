@@ -474,7 +474,7 @@ button {
   margin-top: 1em;
 }
 .page-scan .manual {
-  padding: 1em 2em;
+  padding: 1em;
 }
 .page-scan .input-qrcode {
   border: none;
@@ -507,6 +507,19 @@ button {
 }
 .page-valid {
   background-color: #336633;
+}
+.page-valid table {
+  width: 100%;
+  margin-bottom: 2em;
+}
+.page-valid table td {
+  padding: 0.25em 1em;
+}
+.page-valid table td.label {
+  text-align: right;
+}
+.page-valid table td.field {
+  text-align: left;
 }
 .page-invalid {
   background-color: #993333;
