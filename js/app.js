@@ -40,6 +40,7 @@ UCE.init = function () {
 
 UCE.bindListeners = function () {
   $('.btn-login').on('click', UCE.submitLogin);
+  $('.password').on('keyup', UCE.loginOnEnter);
   $('.btn-refresh').on('click', UCE.refreshLogin);
   $('.btn-scan').on('click', UCE.scanTicket);
   $('.btn-logout').on('click', UCE.logout);
@@ -47,6 +48,7 @@ UCE.bindListeners = function () {
   $('.btn-manual').on('click', UCE.goToManual);
   $('.btn-back').on('click', UCE.goToScan);
   $('.btn-submit').on('click', UCE.submitManualCode);
+  $('.input-qrcode').on('keyup', UCE.submitManualCodeOnEnter);
   $('.hide').on('click', UCE.reset);
 };
 
@@ -251,6 +253,11 @@ UCE.getLogoUrl = function () {
   return window.lscache.get('LogoURL');
 };
 
+UCE.loginOnEnter = function (e) {
+  if (e.keyCode === 13) { UCE.submitLogin(); }
+  return false;
+};
+
 UCE.submitLogin = function (e) {
 
   var username, password;
@@ -398,6 +405,11 @@ UCE.goToScan = function (e) {
   }
 
   UCE.hideManual().then(UCE.showScan);
+};
+
+UCE.submitManualCodeOnEnter = function (e) {
+  if (e.keyCode === 13) { UCE.submitManualCode(); }
+  return false;
 };
 
 UCE.submitManualCode = function (e) {

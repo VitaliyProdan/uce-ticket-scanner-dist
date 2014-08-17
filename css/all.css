@@ -547,13 +547,15 @@ input {
   background-image: url(../img/qrcode.png);
   background-repeat: no-repeat;
   background-position: center 0.5em;
-  padding-top: 115px;
+  background-size: auto 70px;
+  padding-top: 90px;
 }
 .page-scan .btn-submit {
   margin-top: 1em;
 }
 .page-scan .manual {
   padding: 1em;
+  margin: 0;
 }
 .page-valid {
   background-color: #336633;
