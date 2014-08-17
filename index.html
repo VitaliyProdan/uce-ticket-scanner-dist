@@ -7,7 +7,7 @@
   <meta name="description" content="" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui" />
 
-  <link href='http://fonts.googleapis.com/css?family=Kalam' rel='stylesheet' type='text/css'>
+  <!--<link href='http://fonts.googleapis.com/css?family=Kalam' rel='stylesheet' type='text/css'>-->
 
   <link rel="stylesheet" href="css/all.css"/>
 
@@ -19,36 +19,61 @@
   </header>
 
   <div class="page-login">
-    <h2>Ticket Checkin</h2>
+    <h2>Event Ticket Scanner</h2>
     <p>Please log in below</p>
     <fieldset>
       <label for="username">Username</label>
-      <input type="text" id="username" placeholder="Username" />
+      <input type="text" id="username" placeholder="Username" value="mattb" />
     </fieldset>
     <fieldset>
       <label for="username">Password</label>
-      <input type="password" id="password" placeholder="Password" />
+      <input type="password" id="password" placeholder="Password" value="dHwe$3Y" />
     </fieldset>
     <button class="btn-login">Submit</button>
+    <p class="error"></p>
+  </div>
+
+  <div class="page-locked">
+    <h2>Event Ticket Scanner</h2>
+    <p class="message">
+      Account Locked Out.
+    </p>
+    <p class="message">
+      Please wait 15 minutes and press the refresh
+      button below to try again.
+    </p>
+    <button class="btn-refresh">Refresh</button>
   </div>
 
   <div class="page-scan">
+
+    <h3> Welcome <span class="client-name"></span></h3>
 
     <button class="btn-scan">Scan Ticket</button>
 
     <p class="manual">
       No QR Code?  Having trouble scanning the QR Code?
-      Enter a ticket number here to check-in manually:
+      Click below to enter a ticket manually:
     </p>
-    <input type="number" class="input-qrcode" name="qrcode" placeholder="Enter a Ticket Number" />
-    <br/>
-    <button class="btn-submit">Submit Ticket</button>
+    <button class="btn-manual">Enter a Ticket #</button>
+    <button class="btn-logout">Logout</button>
+  </div>
 
+  <div class="page-manual">
+
+    <p class="manual">
+      Enter Ticket Number
+    </p>
+    <input type="number" class="input-qrcode" name="qrcode" placeholder="Enter a Ticket Number" value="1777012821" />
+    <br/>
+    <button class="btn-submit">Submit</button>
+    <button class="btn-back">Back</button>
   </div>
 
   <div class="page-valid">
     <h1 class="valid">Valid Ticket</h1>
     <div class="content"></div>
+    <button class="btn-scan-again">Scan Again</button>
     <button class="hide">Done</button>
   </div>
 
@@ -59,24 +84,18 @@
   </div>
 
   <script id="tpl-valid" type="text/x-handlebars-template">
-    <table>
-      <tbody>
-        <tr>
-          <td class="label">Ticket Code:</td>
-          <td class="field">{{TicketCode}}</td>
-        </tr>
-        <tr>
-          <td class="label">Ticket Type:</td>
-          <td class="field">{{TicketType}}</td>
-        </tr>
-      </tbody>
-    </table
+    <p class="label">Ticket Code</p>
+    <p class="field">{{TicketCode}}</p>
+
+    <p class="label">Ticket Type</p>
+    <p class="field">{{TicketType}}</p>
   </script>
 
   <script id="tpl-invalid" type="text/x-handlebars-template">
     <p class="details">
-      Ticket number &quot;{{TicketCode}}&quot; is not valid
+      Ticket number &quot;{{TicketCode}}&quot; is not valid:
     </p>
+    <p class="details">{{Message}}</p>
   </script>
 
   <script src="js/libs.js"></script>

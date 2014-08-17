@@ -443,18 +443,20 @@ body {
 body {
   background-color: #323232;
   color: white;
-  font-family: 'Kalam', Arial, sans-serif;
+  font-family: Arial, sans-serif;
 }
 .header {
-  margin-bottom: 1em;
+  text-align: center;
+  margin: 1em 0;
 }
 .header img {
-  width: 70%;
-  margin: 0 15%;
+  max-width: 80%;
+  display: none;
 }
 button {
   width: 60%;
   padding: 0.25em;
+  margin: 0.5em 0;
   background-color: #808080;
   color: #323232;
   border: none;
@@ -471,7 +473,9 @@ input {
   padding: 0.5em;
 }
 .page-login,
+.page-locked,
 .page-scan,
+.page-manual,
 .page-valid,
 .page-invalid {
   text-align: center;
@@ -483,16 +487,29 @@ input {
   transition: opacity 100ms linear;
 }
 .page-login.show,
+.page-locked.show,
 .page-scan.show,
+.page-manual.show,
 .page-valid.show,
 .page-invalid.show {
   display: block;
 }
 .page-login.fadein,
+.page-locked.fadein,
 .page-scan.fadein,
+.page-manual.fadein,
 .page-valid.fadein,
 .page-invalid.fadein {
   opacity: 1;
+}
+.page-login p,
+.page-locked p,
+.page-scan p,
+.page-manual p,
+.page-valid p,
+.page-invalid p {
+  margin-left: 10%;
+  margin-right: 10%;
 }
 .page-valid,
 .page-invalid {
@@ -510,10 +527,18 @@ input {
 }
 .page-login fieldset label {
   display: block;
-  margin-top: 1em;
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
 }
 .page-login .btn-login {
   margin-top: 1em;
+}
+.page-login .error {
+  display: none;
+  background-color: #993333;
+  color: white;
+  font-style: italic;
+  padding: 0.5em 10%;
 }
 .page-scan {
   text-align: center;
@@ -533,18 +558,17 @@ input {
 .page-valid {
   background-color: #336633;
 }
-.page-valid table {
-  width: 100%;
-  margin-bottom: 2em;
+.page-valid .label {
+  margin-top: 1em;
+  margin-bottom: 0;
+  font-weight: bold;
+  text-decoration: underline;
 }
-.page-valid table td {
-  padding: 0.25em 1em;
+.page-valid .field {
+  margin-top: 0.25em;
 }
-.page-valid table td.label {
-  text-align: right;
-}
-.page-valid table td.field {
-  text-align: left;
+.page-valid .btn-scan-again {
+  margin-bottom: 1.5em;
 }
 .page-invalid {
   background-color: #993333;

@@ -1,5 +1,6 @@
 var UCE = window.UCE || {},
-    Handlebars = window.Handlebars;
+    Handlebars = window.Handlebars,
+    lscache = window.lscache;
 
 // From: http://bit.ly/1gAKKPP
 function isInPhoneGap() {
@@ -39,17 +40,33 @@ UCE.init = function () {
 
 UCE.bindListeners = function () {
   $('.btn-login').on('click', UCE.submitLogin);
+  $('.btn-refresh').on('click', UCE.refreshLogin);
   $('.btn-scan').on('click', UCE.scanTicket);
+  $('.btn-logout').on('click', UCE.logout);
+  $('.btn-scan-again').on('click', UCE.scanAgain);
+  $('.btn-manual').on('click', UCE.goToManual);
+  $('.btn-back').on('click', UCE.goToScan);
   $('.btn-submit').on('click', UCE.submitManualCode);
   $('.hide').on('click', UCE.reset);
 };
 
 UCE.showPage = function (selector) {
   var $el = $(selector),
-      dfd = new $.Deferred();
+      dfd = new $.Deferred(),
+      logo, clientName;
 
   UCE.log('Showing page ' + selector);
   $el.addClass('show');
+
+  if (selector === '.page-scan') {
+    logo = UCE.getLogoUrl();
+    if (logo) { $('.header img').attr('src', logo).show(); }
+    clientName = UCE.getClientName();
+    if (clientName) { $('.client-name').text(clientName); }
+  } else if (selector === '.page-login') {
+    $('.header img').attr('src', '').hide();
+    $('.client-name').text('');
+  }
 
   requestAnimationFrame(function () {
     UCE.log('Frame 1 ');
@@ -93,65 +110,145 @@ UCE.showValid = _.partial(UCE.showPage, '.page-valid');
 UCE.showInvalid = _.partial(UCE.showPage, '.page-invalid');
 UCE.showLogin = _.partial(UCE.showPage, '.page-login');
 UCE.showScan = _.partial(UCE.showPage, '.page-scan');
+UCE.showManual = _.partial(UCE.showPage, '.page-manual');
+UCE.showLocked = _.partial(UCE.showPage, '.page-locked');
 UCE.hideValid = _.partial(UCE.hidePage, '.page-valid');
 UCE.hideInvalid = _.partial(UCE.hidePage, '.page-invalid');
 UCE.hideLogin = _.partial(UCE.hidePage, '.page-login');
 UCE.hideScan = _.partial(UCE.hidePage, '.page-scan');
+UCE.hideManual = _.partial(UCE.hidePage, '.page-manual');
+UCE.hideLocked = _.partial(UCE.hidePage, '.page-locked');
+
+UCE.ajax = function (step, data) {
+  var endpoint = 'http://www.upcomingevents.com/ticketscanner/process.asp';
+
+  if (!data) { data= {}; }
+
+  data.step = step;
+
+  function success (data) {
+    console.log("Ajax success: ");
+    console.log(data);
+  }
+
+  function error (e) {
+    console.error("Ajax error: " + e);
+  }
+
+  return $.ajax({
+    url: endpoint,
+    dataType: 'json',
+    data: data
+  }).done(success).fail(error);
+};
 
 UCE.loginAjax = function (username, password) {
-  var dfd = new $.Deferred();
+  var dfd = new $.Deferred(),
+      data = {
+        username: username,
+        password: password,
+        clientId: UCE.getClientId(),
+        appSessionId: UCE.getAppSessionId(true),
+        apptype: UCE.getPlatformType(),
+        platform: UCE.getPhoneAndVersion()
+      };
 
-  setTimeout(function () {
-    var mockData, rand = Math.random();
+  return UCE.ajax('login', data);
+};
 
-    if (rand < 0.1) {
-      return dfd.reject();  // Mimic failed ajax request
-    } else if (rand < 0.4) {
-      mockData = {
-        response: {
-          status: '-1',
-          ClientName: 'John Doe',
-          LogoURL: 'img/uce.jpg'
-        }
-      };
-    } else if (rand < 0.7) {
-      mockData = {
-        response: {
-          status: '0',
-          ClientName: 'John Doe',
-          LogoURL: 'img/uce.jpg'
-        }
-      };
-    } else {
-      mockData = {
-        response: {
-          status: '1',
-          ClientName: 'John Doe',
-          LogoURL: 'img/uce.jpg'
-        }
-      };
+UCE.getPlatformType = function () {
+  var platform;
+  if (window.device && window.device.platform) {
+    platform = window.device.platform.toLowerCase();
+    if (platform === 'android') {
+      return 'a';
+    } else if (platform === 'ios') {
+      return 'i';
     }
+  }
+  return 'unknown platform';
+};
 
-    dfd.resolve(mockData);
-  }, 1000);
+UCE.getPhoneModel = function () {
+  if (window.device && window.device.model) {
+    return window.device.model;
+  }
+  return 'unknown model';
+};
 
-  return dfd.promise();
+UCE.getPlatformVersion = function () {
+  if (window.device && window.device.version) {
+    return window.device.version;
+  }
+  return 'unknown version';
+};
+
+UCE.getPhoneAndVersion = function () {
+  return UCE.getPhoneModel() + ' - ' + UCE.getPlatformVersion();
+};
+
+UCE.generateAppSessionId = function () {
+  var id = Math.floor(Math.random()*8999999999+1000000000);
+  lscache.remove('appSessionId');
+  lscache.set('appSessionId', id, 30);
+  return id;
+};
+
+UCE.isAppSessionIdExpired = function () {
+  return lscache.get('appSessionId') == null;
+};
+
+UCE.getAppSessionId = function (generate) {
+  if (!UCE.isAppSessionIdExpired()) {
+    return lscache.get('appSessionId');
+  }
+  return generate ? UCE.generateAppSessionId() : null;
+};
+
+UCE.getClientName = function () {
+  return window.lscache.get('ClientName');
+};
+
+UCE.getClientId = function () {
+  var clientId = window.lscache.get('ClientID');
+  return (clientId ? clientId : '');
 };
 
 UCE.isLoggedIn = function () {
   var clientName = window.lscache.get('ClientName');
-  return clientName != null;
+  if (clientName != null && !UCE.isAppSessionIdExpired()) {
+    return true;
+  }
+  UCE.clearLogin();
+  return false;
+};
+
+UCE.checkValidLoginStatus = function () {
+  var sessionId = UCE.getAppSessionId();
+  if (!UCE.isLoggedIn()) {
+    window.alert("We're sorry, you have been logged out after 30 minutes " +
+                 "of inactivity.  Please log in again");
+    return false;
+  }
+  window.lscache.set('appSessionId', sessionId, 30);
+  return true;
 };
 
 UCE.cacheLogin = function (response) {
   UCE.clearLogin();
-  window.lscache.set('ClientName', response.ClientName, 30);
-  window.lscache.set('LogoURL', response.LogoURL, 30);
+  window.lscache.set('ClientID', response.status);
+  window.lscache.set('ClientName', response.ClientName);
+  window.lscache.set('LogoURL', response.LogoURL);
 };
 
 UCE.clearLogin = function (response) {
+  window.lscache.remove('ClientID');
   window.lscache.remove('ClientName');
   window.lscache.remove('LogoURL');
+};
+
+UCE.getLogoUrl = function () {
+  return window.lscache.get('LogoURL');
 };
 
 UCE.submitLogin = function (e) {
@@ -164,25 +261,31 @@ UCE.submitLogin = function (e) {
     if (response.valid) {
       UCE.cacheLogin(response);
       return UCE.hideLogin().then(UCE.showScan);
+      $('.page-login .error').hide().text('');
+    }
+
+    UCE.clearLogin(response);
+    if (response.locked) {
+      UCE.hideLogin().then(UCE.showLocked);
     } else {
-      UCE.clearLogin(response);
-      window.alert(response.message);
+      $('.page-login .error').text(response.Message).show();
     }
   }
 
   function error(e) {
     UCE.log('Could not login');
-    window.alert('Login could not be processed.  Please make sure you have ' +
-                 'a valid internet connection and try again.');
+    $('.page-login .error').text('Login could not be processed.  ' +
+                                 'Please make sure you have ' +
+                                 'a valid internet connection and ' +
+                                 'try again.').show();
   }
 
   function enhanceData(data) {
     if (data.response.status === '-1') {
       data.response.valid = false;
-      data.response.message = 'Sorry, this account has been locked out.';
+      data.response.locked = true;
     } else if (data.response.status === '0') {
       data.response.valid = false;
-      data.response.message = 'Incorrect username/password combination.';
     } else {
       data.response.valid = true;
     }
@@ -203,6 +306,17 @@ UCE.submitLogin = function (e) {
             .fail(error);
 };
 
+UCE.refreshLogin = function (e) {
+  UCE.cancelEvent(e);
+  UCE.hideLocked().then(UCE.showLogin);
+};
+
+UCE.logout = function (e) {
+  UCE.cancelEvent();
+  UCE.clearLogin();
+  UCE.hideScan().then(UCE.showLogin);
+};
+
 UCE.reset = function (e) {
   UCE.cancelEvent(e);
   UCE.hideValid();
@@ -210,10 +324,24 @@ UCE.reset = function (e) {
   $('.input-qrcode').val('');
 };
 
+UCE.scanAgain = function (e) {
+  UCE.cancelEvent(e);
+
+  if (!UCE.checkValidLoginStatus()) {
+    return UCE.hideValid().then(UCE.showLogin);
+  }
+
+  UCE.hideValid().then(UCE.scanTicket);
+};
+
 UCE.scanTicket = function (e) {
   var scanner = UCE.getBarcodeScanner();
 
   UCE.cancelEvent(e);
+
+  if (!UCE.checkValidLoginStatus()) {
+    return UCE.hideScan().then(UCE.showLogin);
+  }
 
   function success(result) {
     if (result.cancelled !== 0) {
@@ -225,7 +353,7 @@ UCE.scanTicket = function (e) {
     }
 
     UCE.log('Scanned code: ' + result.text);
-    UCE.submitTicket(result.text);
+    UCE.submitTicket(result.text, true);
   }
 
   function error () {
@@ -236,7 +364,7 @@ UCE.scanTicket = function (e) {
     success({
       cancelled: 0,
       format: 'QR_CODE',
-      text: window.prompt('Enter a code', '123456789')
+      text: window.prompt('Enter a code', '1777012821')
     });
     return;
   }
@@ -252,9 +380,35 @@ UCE.getBarcodeScanner = function () {
   return null;
 };
 
+UCE.goToManual = function (e) {
+  UCE.cancelEvent(e);
+
+  if (!UCE.checkValidLoginStatus()) {
+    return UCE.hideScan().then(UCE.showLogin);
+  }
+
+  UCE.hideScan().then(UCE.showManual);
+};
+
+UCE.goToScan = function (e) {
+  UCE.cancelEvent(e);
+
+  if (!UCE.checkValidLoginStatus()) {
+    return UCE.hideManual().then(UCE.showLogin);
+  }
+
+  UCE.hideManual().then(UCE.showScan);
+};
+
 UCE.submitManualCode = function (e) {
   var $code = $('.input-qrcode'),
       code = $code.val();
+
+  UCE.cancelEvent(e);
+
+  if (!UCE.checkValidLoginStatus()) {
+    return UCE.hideManual().then(UCE.showLogin);
+  }
 
   if (code.trim() === '') {
     UCE.log('Invalid code entered');
@@ -262,42 +416,28 @@ UCE.submitManualCode = function (e) {
     return;
   }
 
-  UCE.cancelEvent(e);
-  UCE.submitTicket(code);
+  UCE.submitTicket(code, false);
 };
 
-UCE.ticketAjax = function (code) {
-  var dfd = new $.Deferred();
-
-  setTimeout(function () {
-    var mockData;
-
-    if (Math.random() < 0.1) {
-      return dfd.reject();  // Mimic failed ajax request
-    } else if (Math.random() < 0.55) {
-      mockData = {
-        response: {
-          status: '1',
-          TicketType: 'VIP'
-        }
-      };
-    } else {
-      mockData = {
-        response: {
-          status: '0',
-          TicketType: null
-        }
-      };
-    }
-
-    dfd.resolve(mockData);
-  }, 1000);
-
-  UCE.log('Faking ajax call..');
-  return dfd.promise();
+UCE.uncheckin = function (code) {
+  if (!code) { code = '1777012821'; }
+  return UCE.ajax('uncheckin', { clientid: UCE.getClientId(), ticketnumber: code });
 };
 
-UCE.submitTicket = function (code) {
+UCE.ticketAjax = function (code, fromScan) {
+  var step = fromScan ? 'validatescan' : 'validatemanual',
+      data,
+      dfd = new $.Deferred();
+
+  data = {
+    clientid: UCE.getClientId(),
+    ticketnumber: code
+  }
+
+  return UCE.ajax(step, data);
+};
+
+UCE.submitTicket = function (code, fromScan) {
 
   function success(response) {
     var source, template;
@@ -326,7 +466,7 @@ UCE.submitTicket = function (code) {
     return data.response;
   }
 
-  return UCE.ticketAjax(code)
+  return UCE.ticketAjax(code, fromScan)
             .then(enhanceData)
             .done(success)
             .fail(error);
