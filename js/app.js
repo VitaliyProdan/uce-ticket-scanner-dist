@@ -254,7 +254,10 @@ UCE.getLogoUrl = function () {
 };
 
 UCE.loginOnEnter = function (e) {
-  if (e.keyCode === 13) { UCE.submitLogin(); }
+  if (e.keyCode === 13) {
+    $(e.target).blur();
+    UCE.submitLogin();
+  }
   return false;
 };
 
@@ -408,7 +411,10 @@ UCE.goToScan = function (e) {
 };
 
 UCE.submitManualCodeOnEnter = function (e) {
-  if (e.keyCode === 13) { UCE.submitManualCode(); }
+  if (e.keyCode === 13) {
+    $(e.target).blur();
+    UCE.submitManualCode();
+  }
   return false;
 };
 
