@@ -226,7 +226,7 @@ UCE.getClientId = function () {
 };
 
 UCE.isLoggedIn = function () {
-  var clientName = window.lscache.get(clientName);
+  var clientName = window.lscache.get(UCE.config.lsKeys.clientName);
   if (clientName != null && !UCE.isAppSessionIdExpired()) {
     return true;
   }
