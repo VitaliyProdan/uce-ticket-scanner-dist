@@ -361,7 +361,7 @@ UCE.scanAgain = function (e) {
   setTimeout(function () {
     if ($('.page-valid.show').length > 0) { UCE.hideValid(); }
     if ($('.page-invalid.show').length > 0) { UCE.hideInvalid(); }
-  }, 750);
+  }, 1500);
 };
 
 UCE.scanTicket = function (e) {
