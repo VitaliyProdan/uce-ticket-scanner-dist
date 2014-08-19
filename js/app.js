@@ -354,11 +354,13 @@ UCE.scanTicket = function (e) {
   }
 
   function success(result) {
-    if (result.cancelled !== 0) {
+    if (result.cancelled) {
       UCE.log('User cancelled the scan.');
+      window.alert('Scan cancelled.');
       return;
     } else if (result.format !== 'QR_CODE') {
       UCE.log('QR code not found.');
+      window.alert('QR Code not found.  Please try again.');
       return;
     }
 
