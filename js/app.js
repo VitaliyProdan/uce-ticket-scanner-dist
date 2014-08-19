@@ -7,6 +7,17 @@ function isInPhoneGap() {
   return !(/^http[s]?:\/\//).test(document.URL);
 }
 
+UCE.config = {
+  apiEndpoint: 'http://www.upcomingevents.com/ticketscanner/process.asp',
+  loginTimeoutMins: 30,
+  lsKeys: {
+    appSessionId: 'app-session-id',
+    clientId: 'client-id',
+    clientName: 'client-name',
+    logoUrl: 'logo-url'
+  }
+};
+
 // Wait for PhoneGap to initialize
 UCE.deviceReadyDfd = new $.Deferred();
 if (isInPhoneGap()) {
@@ -122,8 +133,6 @@ UCE.hideManual = _.partial(UCE.hidePage, '.page-manual');
 UCE.hideLocked = _.partial(UCE.hidePage, '.page-locked');
 
 UCE.ajax = function (step, data) {
-  var endpoint = 'http://www.upcomingevents.com/ticketscanner/process.asp';
-
   if (!data) { data= {}; }
 
   data.step = step;
@@ -138,7 +147,7 @@ UCE.ajax = function (step, data) {
   }
 
   return $.ajax({
-    url: endpoint,
+    url: UCE.config.apiEndpoint,
     dataType: 'json',
     data: data
   }).done(success).fail(error);
@@ -191,33 +200,33 @@ UCE.getPhoneAndVersion = function () {
 
 UCE.generateAppSessionId = function () {
   var id = Math.floor(Math.random()*8999999999+1000000000);
-  lscache.remove('appSessionId');
-  lscache.set('appSessionId', id, 30);
+  lscache.remove(UCE.config.lsKeys.appSessionId);
+  lscache.set(UCE.config.lsKeys.appSessionId, id, UCE.config.loginTimeoutMins);
   return id;
 };
 
 UCE.isAppSessionIdExpired = function () {
-  return lscache.get('appSessionId') == null;
+  return lscache.get(UCE.config.lsKeys.appSessionId) == null;
 };
 
 UCE.getAppSessionId = function (generate) {
   if (!UCE.isAppSessionIdExpired()) {
-    return lscache.get('appSessionId');
+    return lscache.get(UCE.config.lsKeys.appSessionId);
   }
   return generate ? UCE.generateAppSessionId() : null;
 };
 
 UCE.getClientName = function () {
-  return window.lscache.get('ClientName');
+  return window.lscache.get(UCE.config.lsKeys.clientName);
 };
 
 UCE.getClientId = function () {
-  var clientId = window.lscache.get('ClientID');
+  var clientId = window.lscache.get(UCE.config.lsKeys.clientId);
   return (clientId ? clientId : '');
 };
 
 UCE.isLoggedIn = function () {
-  var clientName = window.lscache.get('ClientName');
+  var clientName = window.lscache.get(clientName);
   if (clientName != null && !UCE.isAppSessionIdExpired()) {
     return true;
   }
@@ -232,25 +241,25 @@ UCE.checkValidLoginStatus = function () {
                  "of inactivity.  Please log in again");
     return false;
   }
-  window.lscache.set('appSessionId', sessionId, 30);
+  window.lscache.set(UCE.config.lsKeys.appSessionId, sessionId, UCE.config.loginTimeoutMins);
   return true;
 };
 
 UCE.cacheLogin = function (response) {
   UCE.clearLogin();
-  window.lscache.set('ClientID', response.status);
-  window.lscache.set('ClientName', response.ClientName);
-  window.lscache.set('LogoURL', response.LogoURL);
+  window.lscache.set(UCE.config.lsKeys.clientId, response.status);
+  window.lscache.set(UCE.config.lsKeys.clientName, response.ClientName);
+  window.lscache.set(UCE.config.lsKeys.logoUrl, response.LogoURL);
 };
 
 UCE.clearLogin = function (response) {
-  window.lscache.remove('ClientID');
-  window.lscache.remove('ClientName');
-  window.lscache.remove('LogoURL');
+  window.lscache.remove(UCE.config.lsKeys.clientId);
+  window.lscache.remove(UCE.config.lsKeys.clientName);
+  window.lscache.remove(UCE.config.lsKeys.logoUrl);
 };
 
 UCE.getLogoUrl = function () {
-  return window.lscache.get('LogoURL');
+  return window.lscache.get(UCE.config.lsKeys.logoUrl);
 };
 
 UCE.loginOnEnter = function (e) {
@@ -335,13 +344,24 @@ UCE.reset = function (e) {
 };
 
 UCE.scanAgain = function (e) {
+  var promise;
   UCE.cancelEvent(e);
 
   if (!UCE.checkValidLoginStatus()) {
-    return UCE.hideValid().then(UCE.showLogin);
+    if ($('.page-valid.show').length > 0) {
+      promise = UCE.hideValid();
+    } else {
+      promise = UCE.hideInvalid();
+    }
+    return promise.then(UCE.showLogin);
   }
 
-  UCE.hideValid().then(UCE.scanTicket);
+  UCE.scanTicket();
+
+  setTimeout(function () {
+    if ($('.page-valid.show').length > 0) { UCE.hideValid(); }
+    if ($('.page-invalid.show').length > 0) { UCE.hideInvalid(); }
+  }, 750);
 };
 
 UCE.scanTicket = function (e) {
@@ -376,7 +396,7 @@ UCE.scanTicket = function (e) {
     success({
       cancelled: 0,
       format: 'QR_CODE',
-      text: window.prompt('Enter a code', '1777012821')
+      text: window.prompt('Enter a code', '')
     });
     return;
   }

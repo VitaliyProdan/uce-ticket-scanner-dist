@@ -539,6 +539,8 @@ input {
   color: white;
   font-style: italic;
   padding: 0.5em 10%;
+  margin-left: 0;
+  margin-right: 0;
 }
 .page-scan {
   text-align: center;
