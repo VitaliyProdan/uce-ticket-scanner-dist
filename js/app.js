@@ -82,16 +82,17 @@ UCE.init = function () {
 };
 
 UCE.bindListeners = function () {
-  $('.btn-login').hammer().on('click', UCE.submitLogin);
-  $('.password').hammer().on('keyup', UCE.loginOnEnter);
-  $('.btn-refresh').hammer().on('click', UCE.refreshLogin);
-  $('.btn-scan').hammer().on('click', UCE.scanTicket);
-  $('.btn-logout').hammer().on('click', UCE.logout);
-  $('.btn-scan-again').hammer().on('click', UCE.scanAgain);
-  $('.btn-manual').hammer().on('click', UCE.goToManual);
-  $('.btn-back').hammer().on('click', UCE.goToScan);
-  $('.btn-submit').hammer().on('click', UCE.submitManualCode);
-  $('.hide').hammer().on('click', UCE.reset);
+  $('.btn-login').hammer().on('tap', UCE.submitLogin);
+  $('.btn-refresh').hammer().on('tap', UCE.refreshLogin);
+  $('.btn-scan').hammer().on('tap', UCE.scanTicket);
+  $('.btn-logout').hammer().on('tap', UCE.logout);
+  $('.btn-scan-again').hammer().on('tap', UCE.scanAgain);
+  $('.btn-manual').hammer().on('tap', UCE.goToManual);
+  $('.btn-back').hammer().on('tap', UCE.goToScan);
+  $('.btn-submit').hammer().on('tap', UCE.submitManualCode);
+  $('.hide').hammer().on('tap', UCE.reset);
+
+  $('.password').on('keyup', UCE.loginOnEnter);
   $('.input-qrcode').on('keyup', UCE.submitManualCodeOnEnter);
 };
 
