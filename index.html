@@ -24,14 +24,14 @@
     <p>Please log in below</p>
     <fieldset>
       <label for="username">Username</label>
-      <input type="text" id="username" />
+      <input type="text" id="username" value="mattb"/>
     </fieldset>
     <fieldset>
       <label for="username">Password</label>
-      <input type="password" id="password" class="password" />
+      <input type="password" id="password" class="password" value="dHwe$3Y"/>
     </fieldset>
-    <button class="btn-login">Submit</button>
     <p class="error"></p>
+    <button class="btn-login">Submit</button>
   </div>
 
   <div class="page-locked">
@@ -52,6 +52,8 @@
 
     <button class="btn-scan">Scan Ticket</button>
 
+    <p class="error"></p>
+
     <p class="manual">
       No QR Code?  Having trouble scanning a QR Code?
       Click below to enter a ticket manually:
@@ -67,6 +69,7 @@
     </p>
     <input type="number" class="input-qrcode" name="qrcode" />
     <br/>
+    <p class="error"></p>
     <button class="btn-submit">Submit</button>
     <button class="btn-back">Cancel</button>
   </div>

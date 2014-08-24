@@ -115,6 +115,7 @@ UCE.hidePage = function (selector) {
     requestAnimationFrame(function () {
       UCE.log('Removing show class');
       $el.removeClass('show');
+      $el.find('.error').hide().html('');
     });
   });
 };
@@ -237,8 +238,10 @@ UCE.isLoggedIn = function () {
 UCE.checkValidLoginStatus = function () {
   var sessionId = UCE.getAppSessionId();
   if (!UCE.isLoggedIn()) {
-    window.alert("We're sorry, you have been logged out after 30 minutes " +
-                 "of inactivity.  Please log in again");
+    $('.page-login .error').html("We're sorry, you have been logged out " +
+                                 "after 30 minutes of inactivity.  " +
+                                 "Please log in again")
+                           .show();
     return false;
   }
   window.lscache.set(UCE.config.lsKeys.appSessionId, sessionId, UCE.config.loginTimeoutMins);
@@ -293,9 +296,9 @@ UCE.submitLogin = function (e) {
 
   function error(e) {
     UCE.log('Could not login');
-    $('.page-login .error').text('Login could not be processed.  ' +
+    $('.page-login .error').html('Login could not be processed.  ' +
                                  'Please make sure you have ' +
-                                 'a valid internet connection and ' +
+                                 'a valid  internet connection and ' +
                                  'try again.').show();
   }
 
@@ -315,7 +318,7 @@ UCE.submitLogin = function (e) {
   password = $('#password').val();
 
   if (username.length === 0 || password.length === 0) {
-    window.alert('Please enter a username and password');
+    $('.page-login .error').html('Please enter a username and password').show();
     return;
   }
 
@@ -374,13 +377,13 @@ UCE.scanTicket = function (e) {
   }
 
   function success(result) {
+    $('.page-scan .error').hide().html('').hide();
     if (result.cancelled) {
       UCE.log('User cancelled the scan.');
-      window.alert('Scan cancelled.');
       return;
     } else if (result.format !== 'QR_CODE') {
       UCE.log('QR code not found.');
-      window.alert('QR Code not found.  Please try again.');
+      $('.page-scan .error').html('QR Code not found.  Please try again.').show();
       return;
     }
 
@@ -392,6 +395,7 @@ UCE.scanTicket = function (e) {
     UCE.showInvalid();
   }
 
+  // Fallback for browser testing
   if (!scanner) {
     success({
       cancelled: 0,
@@ -452,7 +456,7 @@ UCE.submitManualCode = function (e) {
 
   if (code.trim() === '') {
     UCE.log('Invalid code entered');
-    window.alert('Please enter a valid Ticket Code');
+    $('.page-manual .error').html('Please enter a valid Ticket Code').show();
     return;
   }
 
@@ -496,8 +500,10 @@ UCE.submitTicket = function (code, fromScan) {
 
   function error(e) {
     UCE.log('Could not submit ticket');
-    window.alert('Ticket could not be submitted.  Please make sure you have ' +
-                 'a valid internet connection and try again.');
+    $('.show .error').html('Ticket could not be submitted. ' +
+                           'Please make sure you have a valid ' +
+                           'internet connection and try again.')
+                     .show();
   }
 
   function enhanceData(data) {

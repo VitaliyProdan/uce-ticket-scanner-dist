@@ -511,6 +511,20 @@ input {
   margin-left: 10%;
   margin-right: 10%;
 }
+.page-login p.error,
+.page-locked p.error,
+.page-scan p.error,
+.page-manual p.error,
+.page-valid p.error,
+.page-invalid p.error {
+  display: none;
+  background-color: #993333;
+  color: white;
+  font-style: italic;
+  padding: 0.5em 10%;
+  margin-left: 0;
+  margin-right: 0;
+}
 .page-valid,
 .page-invalid {
   position: absolute;
@@ -532,15 +546,6 @@ input {
 }
 .page-login .btn-login {
   margin-top: 1em;
-}
-.page-login .error {
-  display: none;
-  background-color: #993333;
-  color: white;
-  font-style: italic;
-  padding: 0.5em 10%;
-  margin-left: 0;
-  margin-right: 0;
 }
 .page-scan {
   text-align: center;

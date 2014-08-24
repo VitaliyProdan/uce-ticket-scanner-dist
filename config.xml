@@ -1,17 +1,17 @@
-<?xml version="1.0" encoding="UTF-8"?><widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0" id="org.brophy.uce.test" version="0.0.17">
+<?xml version="1.0" encoding="UTF-8"?><widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0" id="org.brophy.uce.test" version="0.0.18">
     <!-- IDs used for different builds
           org.brophy.uce.test
           org.brophy.uce.rc
     -->
 
-    <name>TicketScanner Test</name>
+    <name>Scanner Test</name>
     <!-- Names used for different builds
       TicketScanner Test
       TicketScanner RC
       TicketScanner
     -->
 
-    <description>UpcomingEvents TicketScanner</description>
+    <description>Scanner</description>
 
     <author href="http://www.brophy.org" email="matt@brophy.org"/>
 
@@ -35,9 +35,8 @@
 
     <!-- Plugins -->
     <gap:plugin name="org.apache.cordova.device" version="0.2.8"/>
+    <gap:plugin name="org.apache.cordova.dialogs" version="0.2.6"/>
     <gap:plugin name="org.apache.cordova.network-information" version="0.2.7"/>
-    <gap:plugin name="com.phonegap.plugin.statusbar" version="1.1.0"/>
-    <gap:plugin name="org.apache.cordova.vibration" version="0.3.7"/>
     <gap:plugin name="com.phonegap.plugins.barcodescanner" version="1.1.0"/>
 
     <!-- Build Only for the Following -->
