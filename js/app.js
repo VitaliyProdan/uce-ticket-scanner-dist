@@ -69,7 +69,7 @@ UCE.init = function () {
   UCE.bindListeners();
 
   // Make iOS7 behave like iOS 6 where the status bar is not on top of the web view
-  if (StatusBar && StatusBar.overlaysWebView && device.isIosPlatform()) {
+  if (StatusBar && StatusBar.overlaysWebView && UCE.isIosPlatform()) {
     StatusBar.overlaysWebView(false);
   }
 
