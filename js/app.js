@@ -38,6 +38,32 @@ UCE.cancelEvent = function (e) {
   return false;
 };
 
+//iOS Helper Functions
+UCE.isIosPlatform = function () {
+  var device = window.device;
+
+  // If no phonegap device property, fall back to userAgent
+  if (!device) {
+    return /iPhone|iPad|iPod/i.test(navigator.userAgent);
+  }
+
+  // Try to check the platform
+  if (device.platform) { return device.platform.match(/^ios/i); }
+
+  if (device.model) {
+      return device.model.match(/^iphone/i) ||
+             device.model.match(/^ipad/i) ||
+             device.model.match(/^ipod/i);
+  }
+
+  return false;
+};
+
+UCE.isAndroidPlatform = function () {
+  return /android/i.test(navigator.userAgent);
+};
+
+
 UCE.init = function () {
   UCE.log('App ready!');
   UCE.bindListeners();
