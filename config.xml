@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0" id="org.brophy.uce.test" version="0.0.26">
+<?xml version="1.0" encoding="UTF-8"?><widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0" id="org.brophy.uce.test" version="0.0.27">
     <!-- IDs used for different builds
           org.brophy.uce.test
           org.brophy.uce.rc
@@ -57,6 +57,7 @@
     <!-- Android Icons-->
     <icon src="icon/android/icon-mdpi.png" gap:platform="android" gap:density="mdpi"/>
     <icon src="icon/android/icon-hdpi.png" gap:platform="android" gap:density="hdpi"/>
+    <icon src="icon/android/icon-xhdpi.png" gap:platform="android" gap:density="xhdpi"/>
 
     <!-- Default Splash Screen -->
     <gap:splash src="splash.png"/>
