@@ -171,6 +171,8 @@ UCE.ajax = function (step, data) {
 
   data.step = step;
 
+  var spinner = window.plugins ? window.plugins.spinnerDialog : null;
+
   function success (data) {
     console.log("Ajax success: ");
     console.log(data);
@@ -180,11 +182,19 @@ UCE.ajax = function (step, data) {
     console.error("Ajax error: " + e);
   }
 
+  function hideSpinner() {
+    spinner.hide();
+  }
+
+  if (spinner) {
+    spinner.show();
+  }
+
   return $.ajax({
     url: UCE.config.apiEndpoint,
     dataType: 'json',
     data: data
-  }).done(success).fail(error);
+  }).done(success).fail(error).always(hideSpinner);
 };
 
 UCE.loginAjax = function (username, password) {
