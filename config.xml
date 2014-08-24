@@ -37,6 +37,7 @@
     <gap:plugin name="org.apache.cordova.device" version="0.2.8"/>
     <gap:plugin name="org.apache.cordova.dialogs" version="0.2.6"/>
     <gap:plugin name="org.apache.cordova.network-information" version="0.2.7"/>
+    <gap:plugin name="com.phonegap.plugin.statusbar" version="1.1.0"/>
     <gap:plugin name="com.phonegap.plugins.barcodescanner" version="1.1.0"/>
 
     <!-- Build Only for the Following -->
