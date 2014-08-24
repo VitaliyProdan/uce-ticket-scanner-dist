@@ -14,7 +14,8 @@ UCE.config = {
     appSessionId: 'app-session-id',
     clientId: 'client-id',
     clientName: 'client-name',
-    logoUrl: 'logo-url'
+    logoUrl: 'logo-url',
+    userId: 'user-id'
   }
 };
 
@@ -69,8 +70,8 @@ UCE.init = function () {
   UCE.bindListeners();
 
   // Make iOS7 behave like iOS 6 where the status bar is not on top of the web view
-  if (StatusBar && StatusBar.overlaysWebView && UCE.isIosPlatform()) {
-    StatusBar.overlaysWebView(false);
+  if (window.StatusBar && window.StatusBar.overlaysWebView && UCE.isIosPlatform()) {
+    window.StatusBar.overlaysWebView(false);
   }
 
   if (UCE.isLoggedIn()) {
@@ -257,6 +258,11 @@ UCE.getClientId = function () {
   return (clientId ? clientId : '');
 };
 
+UCE.getUserId = function () {
+  var userId = window.lscache.get(UCE.config.lsKeys.userId);
+  return (userId ? userId : '');
+};
+
 UCE.isLoggedIn = function () {
   var clientName = window.lscache.get(UCE.config.lsKeys.clientName);
   if (clientName != null && !UCE.isAppSessionIdExpired()) {
@@ -284,12 +290,14 @@ UCE.cacheLogin = function (response) {
   window.lscache.set(UCE.config.lsKeys.clientId, response.status);
   window.lscache.set(UCE.config.lsKeys.clientName, response.ClientName);
   window.lscache.set(UCE.config.lsKeys.logoUrl, response.LogoURL);
+  window.lscache.set(UCE.config.lsKeys.userId, response.UserID);
 };
 
 UCE.clearLogin = function (response) {
   window.lscache.remove(UCE.config.lsKeys.clientId);
   window.lscache.remove(UCE.config.lsKeys.clientName);
   window.lscache.remove(UCE.config.lsKeys.logoUrl);
+  window.lscache.remove(UCE.config.lsKeys.userId);
 };
 
 UCE.getLogoUrl = function () {
@@ -506,6 +514,7 @@ UCE.ticketAjax = function (code, fromScan) {
 
   data = {
     clientid: UCE.getClientId(),
+    userid: UCE.getUserId(),
     ticketnumber: code
   }
 

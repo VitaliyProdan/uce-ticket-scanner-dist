@@ -510,6 +510,7 @@ input {
 .page-invalid p {
   margin-left: 10%;
   margin-right: 10%;
+  line-height: 1.5em;
 }
 .page-login p.error,
 .page-locked p.error,
