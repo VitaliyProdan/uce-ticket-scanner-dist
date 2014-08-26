@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0" id="org.brophy.uce.test" version="0.0.36">
+<?xml version="1.0" encoding="UTF-8"?><widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0" id="org.brophy.uce.test" version="0.0.37">
     <!-- IDs used for different builds
           org.brophy.uce.test
           com.upcomingevents.scanner
@@ -59,6 +59,10 @@
     <icon src="icon/ios/icon-60@2x.png" gap:platform="ios" width="120" height="120"/>
     <icon src="icon/ios/icon.png" gap:platform="ios" width="57" height="57"/>
     <icon src="icon/ios/icon@2x.png" gap:platform="ios" width="114" height="114"/>
+    <icon src="icon/ios/icon-76.png" gap:platform="ios" width="76" height="76"/>
+    <icon src="icon/ios/icon-76@2x.png" gap:platform="ios" width="152" height="152"/>
+    <icon src="icon/ios/icon-72.png" gap:platform="ios" width="72" height="72"/>
+    <icon src="icon/ios/icon-72@2x.png" gap:platform="ios" width="144" height="144"/>
 
     <!-- Android Icons-->
     <icon src="icon/android/icon-mdpi.png" gap:platform="android" gap:density="mdpi"/>
@@ -74,6 +78,12 @@
     <gap:splash src="splash/ios/Default@2x.png" gap:platform="ios" width="640" height="960"/>
     <!-- iPhone 5 / iPod Touch (5th Generation) -->
     <gap:splash src="splash/ios/Default-568h@2x.png" gap:platform="ios" width="640" height="1136"/>
+    <!-- iPad -->
+    <gap:splash src="splash/ios/Default-Portrait.png" gap:platform="ios" width="768" height="1024"/>
+    <gap:splash src="splash/ios/Default-Landscape.png" gap:platform="ios" width="1024" height="768"/>
+    <!-- Retina iPad -->
+    <gap:splash src="splash/ios/Default-Portrait@2x.png" gap:platform="ios" width="1536" height="2048"/>
+    <gap:splash src="splash/ios/Default-Landscape@2x.png" gap:platform="ios" width="2048" height="1536"/>
 
     <!-- Android Splash Screen -->
     <!-- See: http://stackoverflow.com/questions/10574363/android-splash-screen-image-sizes-to-fit-all-devices -->
