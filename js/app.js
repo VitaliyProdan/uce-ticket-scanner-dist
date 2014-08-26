@@ -10,6 +10,7 @@ function isInPhoneGap() {
 UCE.config = {
   apiEndpoint: 'http://www.upcomingevents.com/ticketscanner/process.asp',
   loginTimeoutMins: 30,
+  fallbackTransitionMs: 250,
   lsKeys: {
     appSessionId: 'app-session-id',
     clientId: 'client-id',
@@ -137,6 +138,10 @@ UCE.showPage = function (selector) {
       UCE.log('Frame 2 - adding fadein ');
       if (!$el.hasClass('fadein')) {
         $el.one('transitionend', dfd.resolve);
+        setTimeout(function () {
+          $el.off('transitionend');
+          dfd.resolve();
+        }, UCE.config.fallbackTransitionMs);
         $el.addClass('fadein');
       } else {
         dfd.resolve();
@@ -155,6 +160,10 @@ UCE.hidePage = function (selector) {
 
   if ($el.hasClass('fadein')) {
     $el.one('transitionend', dfd.resolve);
+    setTimeout(function () {
+      $el.off('transitionend');
+      dfd.resolve();
+    }, UCE.config.fallbackTransitionMs);
     $el.removeClass('fadein');
   } else {
     dfd.resolve();
@@ -162,11 +171,14 @@ UCE.hidePage = function (selector) {
 
   return dfd.promise().then(function () {
     UCE.log('Fade done');
+    var dfd = new $.Deferred();
     requestAnimationFrame(function () {
       UCE.log('Removing show class');
       $el.removeClass('show');
       $el.find('.error').hide().html('');
+      dfd.resolve();
     });
+    return dfd.promise();
   });
 };
 
