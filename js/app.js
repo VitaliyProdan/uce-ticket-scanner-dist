@@ -128,6 +128,9 @@ UCE.showPage = function (selector) {
     $('.client-name').text('');
   }
 
+  // Clear any inputs on the page
+  $('input').val('');
+
   requestAnimationFrame(function () {
     UCE.log('Frame 1 ');
     requestAnimationFrame(function () {
