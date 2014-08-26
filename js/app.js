@@ -96,6 +96,20 @@ UCE.bindListeners = function () {
   $('.input-qrcode').on('keyup', UCE.submitManualCodeOnEnter);
 };
 
+UCE.transitionPage = function (selector) {
+  var $cur = $('.show'), toks;
+
+  if ($cur.length === 0) { return UCE.showPage(selector); }
+
+  toks = $cur.attr('class').match(/(page-[a-z]+)/);
+
+  if (toks.length < 2 || '.' + toks[1] === selector) {
+    return UCE.showPage(selector);
+  }
+
+  return UCE.hidePage('.' + toks[1]).then(_.partial(UCE.showPage, selector));
+};
+
 UCE.showPage = function (selector) {
   var $el = $(selector),
       dfd = new $.Deferred(),
@@ -183,7 +197,7 @@ UCE.ajax = function (step, data) {
   }
 
   function hideSpinner() {
-    spinner.hide();
+    if ( spinner) { spinner.hide(); }
   }
 
   if (spinner) {
@@ -332,13 +346,13 @@ UCE.submitLogin = function (e) {
   function success(response) {
     if (response.valid) {
       UCE.cacheLogin(response);
-      return UCE.hideLogin().then(UCE.showScan);
       $('.page-login .error').hide().text('');
+      return UCE.transitionPage('.page-scan');
     }
 
     UCE.clearLogin(response);
     if (response.locked) {
-      UCE.hideLogin().then(UCE.showLocked);
+      return UCE.transitionPage('.page-locked');
     } else {
       $('.page-login .error').text(response.Message).show();
     }
@@ -348,7 +362,7 @@ UCE.submitLogin = function (e) {
     UCE.log('Could not login');
     $('.page-login .error').html('Login could not be processed.  ' +
                                  'Please make sure you have ' +
-                                 'a valid  internet connection and ' +
+                                 'a valid internet connection and ' +
                                  'try again.').show();
   }
 
@@ -380,41 +394,29 @@ UCE.submitLogin = function (e) {
 
 UCE.refreshLogin = function (e) {
   UCE.cancelEvent(e);
-  UCE.hideLocked().then(UCE.showLogin);
+  return UCE.transitionPage('.page-login');
 };
 
 UCE.logout = function (e) {
   UCE.cancelEvent();
   UCE.clearLogin();
-  UCE.hideScan().then(UCE.showLogin);
+  return UCE.transitionPage('.page-login');
 };
 
 UCE.reset = function (e) {
   UCE.cancelEvent(e);
-  UCE.hideValid();
-  UCE.hideInvalid();
   $('.input-qrcode').val('');
+  return UCE.transitionPage('.page-scan');
 };
 
 UCE.scanAgain = function (e) {
-  var promise;
   UCE.cancelEvent(e);
 
   if (!UCE.checkValidLoginStatus()) {
-    if ($('.page-valid.show').length > 0) {
-      promise = UCE.hideValid();
-    } else {
-      promise = UCE.hideInvalid();
-    }
-    return promise.then(UCE.showLogin);
+    return UCE.transitionPage('.page-login');
   }
 
   UCE.scanTicket();
-
-  setTimeout(function () {
-    if ($('.page-valid.show').length > 0) { UCE.hideValid(); }
-    if ($('.page-invalid.show').length > 0) { UCE.hideInvalid(); }
-  }, 1500);
 };
 
 UCE.scanTicket = function (e) {
@@ -423,18 +425,18 @@ UCE.scanTicket = function (e) {
   UCE.cancelEvent(e);
 
   if (!UCE.checkValidLoginStatus()) {
-    return UCE.hideScan().then(UCE.showLogin);
+    return UCE.transitionPage('.page-login');
   }
 
   function success(result) {
     $('.page-scan .error').hide().html('').hide();
     if (result.cancelled) {
       UCE.log('User cancelled the scan.');
-      return;
+      return UCE.transitionPage('.page-scan');
     } else if (result.format !== 'QR_CODE') {
       UCE.log('QR code not found.');
       $('.page-scan .error').html('QR Code not found.  Please try again.').show();
-      return;
+      return UCE.transitionPage('.page-scan');
     }
 
     UCE.log('Scanned code: ' + result.text);
@@ -442,7 +444,7 @@ UCE.scanTicket = function (e) {
   }
 
   function error () {
-    UCE.showInvalid();
+    return UCE.transitionPage('.page-invalid');
   }
 
   // Fallback for browser testing
@@ -470,20 +472,20 @@ UCE.goToManual = function (e) {
   UCE.cancelEvent(e);
 
   if (!UCE.checkValidLoginStatus()) {
-    return UCE.hideScan().then(UCE.showLogin);
+    return UCE.transitionPage('.page-login');
   }
 
-  UCE.hideScan().then(UCE.showManual);
+  return UCE.transitionPage('.page-manual');
 };
 
 UCE.goToScan = function (e) {
   UCE.cancelEvent(e);
 
   if (!UCE.checkValidLoginStatus()) {
-    return UCE.hideManual().then(UCE.showLogin);
+    return UCE.transitionPage('.page-login');
   }
 
-  UCE.hideManual().then(UCE.showScan);
+  return UCE.transitionPage('.page-scan');
 };
 
 UCE.submitManualCodeOnEnter = function (e) {
@@ -501,7 +503,7 @@ UCE.submitManualCode = function (e) {
   UCE.cancelEvent(e);
 
   if (!UCE.checkValidLoginStatus()) {
-    return UCE.hideManual().then(UCE.showLogin);
+    return UCE.transitionPage('.page-login');
   }
 
   if (code.trim() === '') {
@@ -520,14 +522,13 @@ UCE.uncheckin = function (code) {
 
 UCE.ticketAjax = function (code, fromScan) {
   var step = fromScan ? 'validatescan' : 'validatemanual',
-      data,
-      dfd = new $.Deferred();
+      data;
 
   data = {
     clientid: UCE.getClientId(),
     userid: UCE.getUserId(),
     ticketnumber: code
-  }
+  };
 
   return UCE.ajax(step, data);
 };
@@ -540,12 +541,12 @@ UCE.submitTicket = function (code, fromScan) {
       source = $('#tpl-valid').html();
       template = Handlebars.compile(source);
       $('.page-valid .content').html(template(response));
-      return UCE.showValid();
+      return UCE.transitionPage('.page-valid');
     } else {
       source = $('#tpl-invalid').html();
       template = Handlebars.compile(source);
       $('.page-invalid .content').html(template(response));
-      return UCE.showInvalid();
+      return UCE.transitionPage('.page-invalid');
     }
   }
 
