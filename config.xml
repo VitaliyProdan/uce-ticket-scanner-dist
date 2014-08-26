@@ -1,16 +1,20 @@
-<?xml version="1.0" encoding="UTF-8"?><widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0" id="org.brophy.uce.test" version="0.0.35">
+<?xml version="1.0" encoding="UTF-8"?><widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0" id="org.brophy.uce.test" version="0.0.36">
     <!-- IDs used for different builds
           org.brophy.uce.test
           com.upcomingevents.scanner
     -->
 
-    <name>TicketScanner</name>
+    <name>ScanMyTix</name>
     <!-- Names used for different builds
       Scanner Test
       Scanner
     -->
 
-    <description>TicketScanner</description>
+    <description>
+      This app serves to check in event ticket purchases made on
+      UpcomingEvents.com by scanning the QR code on their ticket.
+      Tickets can be shown on their phone or printed out.
+    </description>
 
     <author href="http://www.upcomingevents.com/" email="info@UpcomingEvents.com"/>
 
