@@ -286,9 +286,9 @@ UCE.isLoggedIn = function () {
 UCE.checkValidLoginStatus = function () {
   var sessionId = UCE.getAppSessionId();
   if (!UCE.isLoggedIn()) {
-    $('.page-login .error').html("We're sorry, you have been logged out " +
-                                 "after 30 minutes of inactivity.  " +
-                                 "Please log in again")
+    $('.page-login .error').html('We are sorry, you have been logged out due ' +
+                                 'to 30 minutes of inactivity.  Please log ' +
+                                 'in again.')
                            .show();
     return false;
   }
