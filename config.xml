@@ -4,6 +4,10 @@
           com.upcomingevents.scanner
     -->
 
+    <gap:config-file platform="ios" parent="CFBundleShortVersionString">
+      <string>1</string>
+    </gap:config-file>
+
     <name>ScanMyTix</name>
     <!-- Names used for different builds
       ScanMyTix Test
