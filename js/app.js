@@ -212,11 +212,9 @@ UCE.ajax = function (step, data) {
 };
 
 UCE.loginAjax = function (username, password) {
-  var dfd = new $.Deferred(),
-      data = {
+  var data = {
         username: username,
         password: password,
-        clientId: UCE.getClientId(),
         appSessionId: UCE.getAppSessionId(true),
         apptype: UCE.getPlatformType(),
         platform: UCE.getPhoneAndVersion()
@@ -352,6 +350,7 @@ UCE.submitLogin = function (e) {
 
     UCE.clearLogin(response);
     if (response.locked) {
+      $('.page-locked .custom').html(response.Message);
       return UCE.transitionPage('.page-locked');
     } else {
       $('.page-login .error').text(response.Message).show();
@@ -501,6 +500,7 @@ UCE.submitManualCode = function (e) {
       code = $code.val();
 
   UCE.cancelEvent(e);
+  $code.blur();
 
   if (!UCE.checkValidLoginStatus()) {
     return UCE.transitionPage('.page-login');
@@ -513,11 +513,6 @@ UCE.submitManualCode = function (e) {
   }
 
   UCE.submitTicket(code, false);
-};
-
-UCE.uncheckin = function (code) {
-  if (!code) { code = '1777012821'; }
-  return UCE.ajax('uncheckin', { clientid: UCE.getClientId(), ticketnumber: code });
 };
 
 UCE.ticketAjax = function (code, fromScan) {

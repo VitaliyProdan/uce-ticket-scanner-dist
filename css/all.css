@@ -577,9 +577,6 @@ input {
 .page-valid .field {
   margin-top: 0.25em;
 }
-.page-valid .btn-scan-again {
-  margin-bottom: 1.5em;
-}
 .page-invalid {
   background-color: #993333;
 }
