@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0" id="org.brophy.uce.test" version="1.0.2">
+<?xml version="1.0" encoding="UTF-8"?><widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0" id="com.upcomingevents.scanner" version="1.0.1">
     <!-- IDs used for different builds
           org.brophy.uce.test
           com.upcomingevents.scanner
@@ -8,7 +8,7 @@
       <string>1</string>
     </gap:config-file>
 
-    <name>ScanMyTix Test</name>
+    <name>ScanMyTix</name>
     <!-- Names used for different builds
       ScanMyTix Test
       ScanMyTix
