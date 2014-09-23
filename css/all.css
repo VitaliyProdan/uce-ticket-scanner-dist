@@ -582,6 +582,7 @@ input {
   margin-right: 10%;
 }
 .page-scan .event-label {
+  margin-top: 0;
   margin-left: 5%;
   margin-right: 5%;
 }
@@ -594,12 +595,13 @@ input {
   background-position: center 0.5em;
   background-size: auto 70px;
   padding-top: 90px;
+  margin-top: 0;
 }
 .page-scan .btn-submit {
   margin-top: 1em;
 }
 .page-scan .manual {
-  padding: 1em;
+  padding: 0.5em 1em;
   margin: 0;
 }
 .page-scan .btn-change-event,
