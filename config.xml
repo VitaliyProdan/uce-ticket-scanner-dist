@@ -1,26 +1,26 @@
-<?xml version="1.0" encoding="UTF-8"?><widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0" id="com.upcomingevents.scanner.test" version="1.0.7">
+<?xml version="1.0" encoding="UTF-8"?><widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0" id="com.upcomingevents.scanner" version="1.1">
     <!-- IDs used for different builds
           org.brophy.uce.test
           com.upcomingevents.scanner
     -->
 
     <gap:config-file platform="ios" parent="CFBundleShortVersionString">
-      <string>1</string>
+      <string>2</string>
     </gap:config-file>
 
-    <name>ScanMyTix Test</name>
+    <name>ScanMyTix</name>
     <!-- Names used for different builds
       ScanMyTix Test
       ScanMyTix
     -->
 
     <description>
-      This app serves to check in event ticket purchases made on
-      UpcomingEvents.com by scanning the QR code on their ticket.
+      This app serves to check in event ticket purchases made through the
+      UpcomingEvents.com platform by scanning the QR code on their ticket.
       Tickets can be shown on their phone or printed out.
     </description>
 
-    <author href="http://www.upcomingevents.com/" email="info@UpcomingEvents.com"/>
+    <author href="http://www.upcomingevents.com/" email="scanner@upcomingevents.com"/>
 
     <preference name="phonegap-version" value="3.3.0"/>
     <preference name="webviewbounce" value="false"/>
