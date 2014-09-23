@@ -50,6 +50,11 @@
 
     <h3> Welcome <span class="client-name"></span></h3>
 
+    <p class="event-label">
+      <span class="label">Event:</span>
+      <span class="event-name"></span>
+    </p>
+
     <button class="btn-scan">Scan Ticket</button>
 
     <p class="error"></p>
@@ -59,7 +64,14 @@
       Click below to enter a ticket manually:
     </p>
     <button class="btn-manual">Enter a Ticket #</button>
+    <br/>
+    <button class="btn-change-event">Events</button>
     <button class="btn-logout">Logout</button>
+  </div>
+
+  <div class="page-events">
+    <h2>Events</h2>
+    <ul></ul>
   </div>
 
   <div class="page-manual">
@@ -87,6 +99,15 @@
     <button class="btn-scan-again">Scan Again</button>
     <button class="hide">Done</button>
   </div>
+
+  <script id="tpl-events" type="text/x-handlebars-template">
+    {{#each .}}
+      <li class="event" data-id="{{id}}">
+        <p class="name">{{name}}</p>
+        <p class="date">{{date}}</p>
+      </li>
+    {{/each}}
+  </script>
 
   <script id="tpl-valid" type="text/x-handlebars-template">
     <p class="label">Ticket Code</p>
