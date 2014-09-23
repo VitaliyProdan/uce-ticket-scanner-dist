@@ -5,7 +5,7 @@
     -->
 
     <gap:config-file platform="ios" parent="CFBundleShortVersionString">
-      <string>2</string>
+      <string>3</string>
     </gap:config-file>
 
     <name>ScanMyTix</name>
