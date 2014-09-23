@@ -567,9 +567,6 @@ input {
   padding: 0;
   margin: 0;
   font-weight: bold;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
 }
 .page-events ul .event .date {
   text-align: right;
@@ -585,9 +582,8 @@ input {
   margin-right: 10%;
 }
 .page-scan .event-label {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  margin-left: 5%;
+  margin-right: 5%;
 }
 .page-scan .event-label .label {
   font-weight: bold;
