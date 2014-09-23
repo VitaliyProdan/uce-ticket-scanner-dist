@@ -48,7 +48,7 @@
 
   <div class="page-scan">
 
-    <h3> Welcome <span class="client-name"></span></h3>
+    <h3 class="welcome"> Welcome <span class="client-name"></span></h3>
 
     <p class="event-label">
       <span class="label">Event:</span>
@@ -60,13 +60,16 @@
     <p class="error"></p>
 
     <p class="manual">
-      No QR Code?  Having trouble scanning a QR Code?
+      Having trouble scanning a QR Code?
       Click below to enter a ticket manually:
     </p>
-    <button class="btn-manual">Enter a Ticket #</button>
-    <br/>
-    <button class="btn-change-event">Events</button>
-    <button class="btn-logout">Logout</button>
+    <div>
+      <button class="btn-manual">Enter a Ticket #</button>
+    </div>
+    <div>
+      <button class="btn-change-event">Change Event</button>
+      <button class="btn-logout">Logout</button>
+    </div>
   </div>
 
   <div class="page-events">
@@ -110,7 +113,7 @@
   </script>
 
   <script id="tpl-valid" type="text/x-handlebars-template">
-    <p class="label">Ticket Code</p>
+    <p class="label">Ticket Number</p>
     <p class="field">{{TicketCode}}</p>
 
     <p class="label">Ticket Type</p>

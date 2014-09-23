@@ -472,14 +472,6 @@ input {
   border-radius: 0.5em;
   padding: 0.5em;
 }
-.btn-change-event,
-.btn-logout {
-  width: 29%;
-  margin-left: 1%;
-  margin-right: 1%;
-  font-size: 1em;
-  height: 2em;
-}
 .page-login,
 .page-locked,
 .page-events,
@@ -588,6 +580,10 @@ input {
 .page-scan {
   text-align: center;
 }
+.page-scan .welcome {
+  margin-left: 10%;
+  margin-right: 10%;
+}
 .page-scan .event-label {
   overflow: hidden;
   white-space: nowrap;
@@ -609,6 +605,14 @@ input {
 .page-scan .manual {
   padding: 1em;
   margin: 0;
+}
+.page-scan .btn-change-event,
+.page-scan .btn-logout {
+  width: 43%;
+  margin-left: 1%;
+  margin-right: 1%;
+  font-size: 1em;
+  height: 3em;
 }
 .page-valid {
   background-color: #336633;
