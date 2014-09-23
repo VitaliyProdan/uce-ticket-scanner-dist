@@ -263,6 +263,7 @@ UCE.eventAjax = function () {
                 return e;
               })
               .sortBy('dateObj')
+              .reverse()
               .value();
     }
     return error('Invalid JSON returned');
@@ -270,11 +271,6 @@ UCE.eventAjax = function () {
 
   function error(e) {
     console.error('Could not load events: ' + e);
-
-    if (e.status === 200) {
-      var data = success(JSON.parse(e.responseText.replace(/, "date"/g, "\", \"date\"")));
-      return new $.Deferred().resolve(data);
-    }
   }
 
   return UCE.ajax('eventlist', data).then(success, error);
