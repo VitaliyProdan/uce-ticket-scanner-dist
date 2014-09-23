@@ -48,33 +48,18 @@
 
   <div class="page-scan">
 
-    <h3 class="welcome"> Welcome <span class="client-name"></span></h3>
-
-    <p class="event-label">
-      <span class="label">Event:</span>
-      <span class="event-name"></span>
-    </p>
+    <h3> Welcome <span class="client-name"></span></h3>
 
     <button class="btn-scan">Scan Ticket</button>
 
     <p class="error"></p>
 
     <p class="manual">
-      Having trouble scanning a QR Code?
+      No QR Code?  Having trouble scanning a QR Code?
       Click below to enter a ticket manually:
     </p>
-    <div>
-      <button class="btn-manual">Enter a Ticket #</button>
-    </div>
-    <div>
-      <button class="btn-change-event">Change Event</button>
-      <button class="btn-logout">Logout</button>
-    </div>
-  </div>
-
-  <div class="page-events">
-    <h2>Events</h2>
-    <ul></ul>
+    <button class="btn-manual">Enter a Ticket #</button>
+    <button class="btn-logout">Logout</button>
   </div>
 
   <div class="page-manual">
@@ -103,17 +88,8 @@
     <button class="hide">Done</button>
   </div>
 
-  <script id="tpl-events" type="text/x-handlebars-template">
-    {{#each .}}
-      <li class="event" data-id="{{id}}">
-        <p class="name">{{name}}</p>
-        <p class="date">{{date}}</p>
-      </li>
-    {{/each}}
-  </script>
-
   <script id="tpl-valid" type="text/x-handlebars-template">
-    <p class="label">Ticket Number</p>
+    <p class="label">Ticket Code</p>
     <p class="field">{{TicketCode}}</p>
 
     <p class="label">Ticket Type</p>

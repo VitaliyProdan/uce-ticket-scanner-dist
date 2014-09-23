@@ -16,9 +16,7 @@ UCE.config = {
     clientId: 'client-id',
     clientName: 'client-name',
     logoUrl: 'logo-url',
-    userId: 'user-id',
-    eventId: 'event-id',
-    eventName: 'event-name'
+    userId: 'user-id'
   }
 };
 
@@ -78,11 +76,7 @@ UCE.init = function () {
   }
 
   if (UCE.isLoggedIn()) {
-    if (UCE.getEventId()) {
-      UCE.showScan();
-    } else {
-      UCE.prepEventView();
-    }
+    UCE.showScan();
   } else {
     UCE.showLogin();
   }
@@ -93,7 +87,6 @@ UCE.bindListeners = function () {
   $('.btn-refresh').hammer().on('tap', UCE.refreshLogin);
   $('.btn-scan').hammer().on('tap', UCE.scanTicket);
   $('.btn-logout').hammer().on('tap', UCE.logout);
-  $('.btn-change-event').hammer().on('tap', UCE.changeEvent);
   $('.btn-scan-again').hammer().on('tap', UCE.scanAgain);
   $('.btn-manual').hammer().on('tap', UCE.goToManual);
   $('.btn-back').hammer().on('tap', UCE.goToScan);
@@ -127,15 +120,10 @@ UCE.showPage = function (selector) {
   $el.addClass('show');
 
   if (selector === '.page-scan') {
-    var logo = UCE.getLogoUrl();
+    logo = UCE.getLogoUrl();
     if (logo) { $('.header img').attr('src', logo).show(); }
-    var clientName = UCE.getClientName();
+    clientName = UCE.getClientName();
     if (clientName) { $('.client-name').text(clientName); }
-    var eventName = UCE.getEventName() || 'Unknown Event';
-    $('.page-scan .event-name').html(eventName);
-  } else if (selector === '.page-events') {
-    var logo = UCE.getLogoUrl();
-    if (logo) { $('.header img').attr('src', logo).show(); }
   } else if (selector === '.page-login') {
     $('.header img').attr('src', '').hide();
     $('.client-name').text('');
@@ -250,33 +238,6 @@ UCE.loginAjax = function (username, password) {
   return UCE.ajax('login', data);
 };
 
-UCE.eventAjax = function () {
-  var data = {
-    clientid: UCE.getClientId()
-  };
-
-  function success(d) {
-    if (d && d.response && d.response.events && _.isArray(d.response.events.event)) {
-      return _(d.response.events.event)
-              .map(function (e) {
-                e.dateObj = new Date(Date.parse(e.date));
-                return e;
-              })
-              .sortBy('dateObj')
-              .reverse()
-              .value();
-    }
-    return error('Invalid JSON returned');
-  }
-
-  function error(e) {
-    console.error('Could not load events: ' + e);
-  }
-
-  return UCE.ajax('eventlist', data).then(success, error);
-};
-
-
 UCE.getPlatformType = function () {
   var platform;
   if (window.device && window.device.platform) {
@@ -340,22 +301,6 @@ UCE.getUserId = function () {
   return (userId ? userId : '');
 };
 
-UCE.getEventId = function () {
-  return window.lscache.get(UCE.config.lsKeys.eventId);
-};
-
-UCE.setEventId = function (id) {
-  window.lscache.set(UCE.config.lsKeys.eventId, id);
-};
-
-UCE.getEventName = function () {
-  return window.lscache.get(UCE.config.lsKeys.eventName);
-};
-
-UCE.setEventName = function (name) {
-  window.lscache.set(UCE.config.lsKeys.eventName, name);
-};
-
 UCE.isLoggedIn = function () {
   var clientName = window.lscache.get(UCE.config.lsKeys.clientName);
   if (clientName != null && !UCE.isAppSessionIdExpired()) {
@@ -391,8 +336,6 @@ UCE.clearLogin = function (response) {
   window.lscache.remove(UCE.config.lsKeys.clientName);
   window.lscache.remove(UCE.config.lsKeys.logoUrl);
   window.lscache.remove(UCE.config.lsKeys.userId);
-  window.lscache.remove(UCE.config.lsKeys.eventId);
-  window.lscache.remove(UCE.config.lsKeys.eventName);
 };
 
 UCE.getLogoUrl = function () {
@@ -417,7 +360,7 @@ UCE.submitLogin = function (e) {
     if (response.valid) {
       UCE.cacheLogin(response);
       $('.page-login .error').hide().text('');
-      return UCE.prepEventView();
+      return UCE.transitionPage('.page-scan');
     }
 
     UCE.clearLogin(response);
@@ -469,52 +412,15 @@ UCE.refreshLogin = function (e) {
 };
 
 UCE.logout = function (e) {
-  UCE.cancelEvent(e);
+  UCE.cancelEvent();
   UCE.clearLogin();
   return UCE.transitionPage('.page-login');
-};
-
-UCE.changeEvent = function (e) {
-  UCE.cancelEvent(e);
-  UCE.prepEventView();
-  return false;
 };
 
 UCE.reset = function (e) {
   UCE.cancelEvent(e);
   $('.input-qrcode').val('');
   return UCE.transitionPage('.page-scan');
-};
-
-UCE.prepEventView = function () {
-
-  function success(events) {
-    var source = $('#tpl-events').html();
-    var template = Handlebars.compile(source);
-    $('.event').hammer().off('tap');
-    $('.page-events ul').html(template(events));
-    $('.event').hammer().on('tap', UCE.chooseEvent);
-    return UCE.transitionPage('.page-events');
-  }
-
-  function error(e) {
-    $('.page-login .error').html('We\'re sorry, there was an issue retrieving ' +
-                                 'the events for this account.  Please try ' +
-                                 'logging in again.')
-                           .show();
-    return UCE.transitionPage('.page-login');
-    return false;
-  }
-
-  return UCE.eventAjax().then(success, error);
-};
-
-UCE.chooseEvent = function (e) {
-  var $li = $(e.target),
-      eventId = $li.data('id');
-  UCE.setEventId(eventId);
-  UCE.setEventName($li.find('.name').html());
-  UCE.transitionPage('.page-scan');
 };
 
 UCE.scanAgain = function (e) {
@@ -528,9 +434,7 @@ UCE.scanAgain = function (e) {
 };
 
 UCE.scanTicket = function (e) {
-  var scanner = UCE.getBarcodeScanner(),
-      acceptedFormats = [ 'QR_CODE', 'UPC_E', 'UPC_A', 'EAN_8', 'EAN_13',
-                          'CODE_128', 'CODE_39', 'ITF' ];
+  var scanner = UCE.getBarcodeScanner();
 
   UCE.cancelEvent(e);
 
@@ -543,9 +447,9 @@ UCE.scanTicket = function (e) {
     if (result.cancelled) {
       UCE.log('User cancelled the scan.');
       return UCE.transitionPage('.page-scan');
-    } else if (acceptedFormats.indexOf(result.format) < 0) {
-      UCE.log('QR code/Barcode not found.');
-      $('.page-scan .error').html('QR Code/Barcode not found.  Please try again.').show();
+    } else if (result.format !== 'QR_CODE') {
+      UCE.log('QR code not found.');
+      $('.page-scan .error').html('QR Code not found.  Please try again.').show();
       return UCE.transitionPage('.page-scan');
     }
 
@@ -633,7 +537,6 @@ UCE.ticketAjax = function (code, fromScan) {
   data = {
     clientid: UCE.getClientId(),
     userid: UCE.getUserId(),
-    eventid: UCE.getEventId(),
     ticketnumber: code
   };
 
