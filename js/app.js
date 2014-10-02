@@ -600,24 +600,14 @@ UCE.goToScan = function (e) {
 
 UCE.onManualCodeKeyUp = function (e) {
   var $input = $(e.target),
-      code = e.keyCode,
-      $err = $('.qrcode-error'),
-      regex = /[^0-9a-z\-]/ig;
+      code = e.keyCode;
 
   if (code === 13) {
-    $err.hide();
     $input.blur();
     UCE.submitManualCode();
     return false;
-  } else if (code !== 8 && code !== 189 && regex.test(String.fromCharCode(code))) {
-    // For whatever reason, fromCharCode doesn't interpret a dash correctly (189)
-    // 8 is to allow backspace
-    $err.html('Ticket numbers can only contain numbers, letters, and dashes').show();
-    $input.val($input.val().replace(regex, ''));
-    return UCE.cancelEvent(e);
   }
 
-  $err.hide();
   return true;
 };
 
@@ -636,8 +626,10 @@ UCE.submitManualCode = function (e) {
     UCE.log('Invalid code entered');
     $('.page-manual .error').html('Please enter a valid Ticket Code').show();
     return;
+  } else if (/[^0-9a-z\-]/ig.test(code)) {
+    $('.page-manual .error').html('Ticket codes can only contains numbers, letters, and dashes').show();
+    return UCE.cancelEvent(e);
   }
-
   UCE.submitTicket(code, false);
 };
 
