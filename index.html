@@ -24,11 +24,11 @@
     <p>Please log in below</p>
     <fieldset>
       <label for="username">Username</label>
-      <input type="text" id="username" />
+      <input type="text" id="username" maxlength="30" />
     </fieldset>
     <fieldset>
       <label for="username">Password</label>
-      <input type="password" id="password" class="password" />
+      <input type="password" id="password" class="password" maxlength="30" />
     </fieldset>
     <p class="error"></p>
     <button class="btn-login">Submit</button>
@@ -48,18 +48,33 @@
 
   <div class="page-scan">
 
-    <h3> Welcome <span class="client-name"></span></h3>
+    <h3 class="welcome"> Welcome <span class="client-name"></span></h3>
+
+    <p class="event-label">
+      <span class="label">Event:</span>
+      <span class="event-name"></span>
+    </p>
 
     <button class="btn-scan">Scan Ticket</button>
 
     <p class="error"></p>
 
     <p class="manual">
-      No QR Code?  Having trouble scanning a QR Code?
+      Having trouble scanning a QR Code?
       Click below to enter a ticket manually:
     </p>
-    <button class="btn-manual">Enter a Ticket #</button>
-    <button class="btn-logout">Logout</button>
+    <div>
+      <button class="btn-manual">Enter a Ticket #</button>
+    </div>
+    <div>
+      <button class="btn-change-event">Change Event</button>
+      <button class="btn-logout">Logout</button>
+    </div>
+  </div>
+
+  <div class="page-events">
+    <h2>Events</h2>
+    <ul></ul>
   </div>
 
   <div class="page-manual">
@@ -67,7 +82,8 @@
     <p class="manual">
       Enter Ticket Number
     </p>
-    <input type="number" class="input-qrcode" name="qrcode" />
+    <p class="qrcode-error"></p>
+    <input type="text" class="input-qrcode" name="qrcode" maxlength="20" />
     <br/>
     <p class="error"></p>
     <button class="btn-submit">Submit</button>
@@ -88,8 +104,17 @@
     <button class="hide">Done</button>
   </div>
 
+  <script id="tpl-events" type="text/x-handlebars-template">
+    {{#each .}}
+      <li class="event" data-id="{{id}}">
+        <p class="name">{{name}}</p>
+        <p class="date">{{date}}</p>
+      </li>
+    {{/each}}
+  </script>
+
   <script id="tpl-valid" type="text/x-handlebars-template">
-    <p class="label">Ticket Code</p>
+    <p class="label">Ticket Number</p>
     <p class="field">{{TicketCode}}</p>
 
     <p class="label">Ticket Type</p>
