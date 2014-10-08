@@ -102,6 +102,10 @@ UCE.bindListeners = function () {
 
   $('.password').on('keyup', UCE.loginOnEnter);
   $('.input-qrcode').on('keyup', UCE.onManualCodeKeyUp);
+
+  Handlebars.registerHelper('safestring', function(text) {
+    return new Handlebars.SafeString(text);
+  });
 };
 
 UCE.transitionPage = function (selector) {

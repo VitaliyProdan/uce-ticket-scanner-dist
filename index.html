@@ -106,7 +106,7 @@
   <script id="tpl-events" type="text/x-handlebars-template">
     {{#each .}}
       <li class="event" data-id="{{id}}">
-        <p class="name">{{name}}</p>
+        <p class="name">{{safestring name}}</p>
         <p class="date">{{date}}</p>
       </li>
     {{/each}}
