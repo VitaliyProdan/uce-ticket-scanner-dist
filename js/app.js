@@ -8,7 +8,7 @@ function isInPhoneGap() {
 }
 
 UCE.config = {
-  apiEndpoint: 'http://www.upcomingevents.com/ticketscanner/process.asp',
+  apiEndpoint: 'https://uce-staging.celerify.com/ticketscanner/process.asp',
   loginTimeoutMins: 30,
   fallbackTransitionMs: 250,
   lsKeys: {
